@@ -1,0 +1,120 @@
+﻿@model IEnumerable<AvaliePlus.Models.Filme>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!-- TOPO COM ÍCONES BONITOS -->
+<div class="d-flex justify-content-end gap-3 mb-4 top-nav">
+    <a href="/Account/Login" class="btn btn-outline-light d-flex align-items-center gap-2">
+        <i class="bi bi-box-arrow-left"></i> Voltar ao Login
+    </a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a href="/Usuarios" class="btn btn-success d-flex align-items-center gap-2">
+            <i class="bi bi-shield-lock-fill"></i> Área Administrativa
+        </a>
+    }
+</div>
+
+<div class="container py-4">
+    <div class="mb-4">
+        <label for="filmeSelect" class="form-label text-light">Escolha um filme:</label>
+        <select id="filmeSelect" class="form-select bg-dark text-light border-secondary">
+            <option value="" selected>Todos os filmes</option>
+            @foreach (var filme in Model)
+            {
+                <option value="@filme.Id">@filme.Titulo</option>
+            }
+        </select>
+    </div>
+
+    <h2 class="text-light mb-3">Filmes Recentes</h2>
+
+    <div class="row" id="filmeContainer">
+        @foreach (var filme in Model)
+        {
+            <div class="col-md-4 filme-card mb-4" data-filme-id="@filme.Id">
+                <div class="card bg-dark text-white border-secondary h-100">
+                    <img src="@filme.ImagemUrl" class="card-img-top" alt="Capa do Filme" style="height: 300px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column text-center">
+                        <h5 class="card-title">@filme.Titulo</h5>
+                        <button class="btn btn-sobre mt-2" onclick="toggleDescricao(this)">Sobre</button>
+                        <div class="descricao-filme mt-3 text-start">
+                            <p><strong>Sinopse:</strong> @filme.Sinopse</p>
+                            <p><strong>Diretor:</strong> @filme.Diretor</p>
+                            <p><strong>Gênero:</strong> @filme.Genero</p>
+                            <p><strong>Ano:</strong> @filme.Ano</p>
+                            <p><strong>Duração:</strong> @filme.DuracaoMinutos min</p>
+                            <p><strong>Descrição:</strong> @filme.Descricao</p>
+                            <a href="/Filmes/Details/@filme.Id" class="btn btn-outline-light mt-2 w-100">Ver Detalhes</a>
+                        </div>
+
+                        <!-- 🔽 AQUI ENTRA AVALIAÇÕES 🔽 -->
+                        <button class="btn btn-avaliacoes mt-2" onclick="toggleAvaliacoes(this)">Avaliações</button>
+
+                        <div class="avaliacoes-filme mt-3 text-start" style="display: none;">
+                            @if (filme.Avaliacoes != null && filme.Avaliacoes.Any())
+                            {
+                                <div class="chatbox border rounded p-2 bg-secondary bg-opacity-25 text-white">
+                                    @foreach (var avaliacao in filme.Avaliacoes.OrderByDescending(a => a.Data))
+                                    {
+                                        <div class="mb-2">
+                                            <strong>@avaliacao.Usuario:</strong> @avaliacao.Comentario<br />
+                                            <small class="text-muted">@avaliacao.Data.ToString("g")</small>
+                                        </div>
+                                        @if (User.Identity?.Name == avaliacao.Usuario || User.IsInRole("Admin"))
+                                        {
+                                            <div class="d-flex gap-2 mt-1">
+                                                <a href="/Avaliacoes/Edit/@avaliacao.Id" class="btn btn-sm btn-outline-warning">Editar</a>
+                                                <a href="/Avaliacoes/Delete/@avaliacao.Id" class="btn btn-sm btn-outline-danger">Excluir</a>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-light">Nenhuma avaliação ainda.</p>
+                            }
+
+                            <form asp-controller="Avaliacoes" asp-action="Create" method="post" class="mt-2">
+                                <input type="hidden" name="filmeId" value="@filme.Id" />
+                                <div class="mb-2">
+                                    <textarea name="comentario" class="form-control bg-dark text-light border-secondary" rows="2" placeholder="Deixe sua avaliação..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-outline-info btn-sm">Enviar Avaliação</button>
+                            </form>
+                        </div>
+                        <!-- 🔼 FIM AVALIAÇÕES 🔼 -->
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleDescricao(button) {
+            const descricao = button.nextElementSibling;
+            descricao.style.display = descricao.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleAvaliacoes(button) {
+            const avaliacoes = button.nextElementSibling;
+            avaliacoes.style.display = avaliacoes.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.getElementById('filmeSelect').addEventListener('change', function () {
+            const selectedId = this.value;
+            if (selectedId === "") {
+                document.querySelectorAll('.filme-card').forEach(card => {
+                    card.style.display = "block";
+                });
+            } else {
+                window.location.href = `/Filmes/Details/${selectedId}`;
+            }
+        });
+    </script>
+}

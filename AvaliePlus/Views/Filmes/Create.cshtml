@@ -1,0 +1,52 @@
+@model AvaliePlus.Models.Filme
+
+@{
+    ViewData["Title"] = "Cadastrar Novo Filme";
+}
+
+<div class="form-container">
+    <div class="form-card">
+        <h2 class="form-title">Cadastrar Novo Filme</h2>
+            <form asp-action="Create" class="form-body">
+                @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <input asp-for="Titulo" class="form-control" placeholder="Título" />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Diretor" class="form-control" placeholder="Diretor" />
+                <span asp-validation-for="Diretor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Genero" class="form-control" placeholder="Gênero" />
+                <span asp-validation-for="Genero" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Ano" class="form-control" placeholder="Ano" />
+                <span asp-validation-for="Ano" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="DuracaoMinutos" class="form-control" placeholder="Duração (min)" />
+                <span asp-validation-for="DuracaoMinutos" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <textarea asp-for="Descricao" class="form-control" placeholder="Descrição"></textarea>
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="ImagemUrl" class="form-control" placeholder="URL da Imagem" />
+                <span asp-validation-for="ImagemUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <textarea asp-for="Sinopse" class="form-control" placeholder="Sinopse"></textarea>
+                <span asp-validation-for="Sinopse" class="text-danger"></span>
+            </div>
+
+            <div class="form-buttons">
+                <button type="submit" class="btn-salvar">Salvar</button>
+                <a asp-action="Index" class="btn-voltar">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>

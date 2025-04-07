@@ -1,0 +1,49 @@
+﻿@model AvaliePlus.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/auth.css" />
+
+<div class="login-container">
+    <h2>Entrar no Avalie+</h2>
+
+    <!-- ✅ Mensagem de sucesso após o cadastro -->
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success" style="margin-bottom: 20px;">
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+
+    <form asp-action="Login" method="post" class="login-form">
+        @Html.AntiForgeryToken()
+
+        <!-- Mostra mensagens de erro gerais -->
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn-login">Entrar</button>
+    </form>
+
+    <div class="register-link">
+        <p>Não tem uma conta? <a asp-controller="Account" asp-action="Register">Cadastre-se aqui</a></p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

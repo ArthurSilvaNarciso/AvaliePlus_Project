@@ -1,0 +1,49 @@
+﻿@model IEnumerable<AvaliePlus.Models.Filme>
+
+@{
+    ViewData["Title"] = "Filmes";
+}
+
+<h1 class="titulo-pagina">Filmes Cadastrados</h1>
+
+<p class="text-center">
+    <a class="btn-sobre" asp-action="Create">
+        <i class="fa fa-plus-circle"></i> Criar Novo
+    </a>
+</p>
+
+<div class="filmes-grid">
+    @foreach (var item in Model)
+    {
+        <div class="card-filme">
+            <img class="filme-img" src="@item.ImagemUrl" alt="Capa do filme" />
+            <h2 class="titulo-filme">@item.Titulo</h2>
+            <p class="texto-filme"><strong>Diretor:</strong> @item.Diretor</p>
+            <p class="texto-filme"><strong>Gênero:</strong> @item.Genero</p>
+            <p class="texto-filme"><strong>Ano:</strong> @item.Ano</p>
+            <p class="texto-filme"><strong>Duração:</strong> @item.DuracaoMinutos min</p>
+            <div class="botoes-card">
+                <a class="btn-acoes" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                <a class="btn-acoes" asp-action="Details" asp-route-id="@item.Id">Detalhes</a>
+                <a class="btn-acoes" asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Paginação -->
+@if (ViewBag.TotalPages > 1)
+{
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+}

@@ -1,0 +1,56 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("UserRole");
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AvaliePlus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body style="background-color: #121212; color: #f5f5f5; font-family: 'Segoe UI', sans-serif;">
+    <header>
+        <nav style="background-color: #1e1e1e; padding: 1rem; border-radius: 12px; margin: 1rem auto; width: 90%; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+            <div class="top-actions" style="display: flex; gap: 1rem;">
+                <a class="nav-link" asp-controller="Home" asp-action="Index" style="background-color: #2e2e2e; padding: 0.5rem 1rem; border-radius: 999px; color: #c2a6ff; font-weight: bold; text-decoration: none;">
+                    <i class="fa fa-home"></i> Home
+                </a>
+                <a class="nav-link" asp-controller="Filmes" asp-action="Index" style="background-color: #2e2e2e; padding: 0.5rem 1rem; border-radius: 999px; color: #c2a6ff; font-weight: bold; text-decoration: none;">
+                    Filmes
+                </a>
+                <a class="nav-link" asp-controller="Filmes" asp-action="Create" style="background-color: #2e2e2e; padding: 0.5rem 1rem; border-radius: 999px; color: #c2a6ff; font-weight: bold; text-decoration: none;">
+                    Criar Novo
+                </a>
+
+                @if (role == "Admin")
+                {
+                    <a class="nav-link" asp-controller="Usuarios" asp-action="Index" style="background-color: #2e2e2e; padding: 0.5rem 1rem; border-radius: 999px; color: #c2a6ff; font-weight: bold; text-decoration: none;">
+                        Gerenciar Usuários
+                    </a>
+                }
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-container" style="width: 80%; margin: auto; padding: 2rem;">
+        <main class="auth-layout" style="background-color: #1a1a1a; border-radius: 15px; padding: 2rem; box-shadow: 0 0 20px rgba(255, 255, 255, 0.03); overflow-x: auto;">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer style="text-align: center; margin-top: 2rem; padding: 1rem;">
+        <p style="color: #888;">© 2025 - AvaliePlus</p>
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+
+    <!-- Scripts de Validação Client-Side -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

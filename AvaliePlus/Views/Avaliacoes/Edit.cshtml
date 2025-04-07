@@ -1,0 +1,17 @@
+﻿@model AvaliePlus.Models.Avaliacao
+
+@{
+    ViewData["Title"] = "Editar Avaliação";
+}
+
+<h2 class="text-light">Editar Avaliação</h2>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label asp-for="Comentario" class="form-label text-light"></label>
+        <textarea asp-for="Comentario" class="form-control bg-dark text-light border-secondary" rows="4"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a asp-action="Details" asp-controller="Filmes" asp-route-id="@Model.FilmeId" class="btn btn-secondary">Cancelar</a>
+</form>

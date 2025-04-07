@@ -1,0 +1,42 @@
+﻿@using AvaliePlus.Models
+@model IEnumerable<Usuario>
+
+@{
+    ViewData["Title"] = "Gerenciar Usuários";
+}
+
+<div class="main-container" style="max-width: 900px; margin: auto; padding: 30px;">
+    <!-- Botão Voltar para Home -->
+    <div class="d-flex justify-content-end mb-3">
+        <a href="/" class="btn btn-outline-light d-flex align-items-center gap-2">
+            <i class="bi bi-house-door-fill"></i> Voltar para Home
+        </a>
+    </div>
+
+    <h2 style="text-align: center; color: white; margin-bottom: 20px;">Usuários Cadastrados</h2>
+
+    <table class="table" style="width: 100%; background-color: #2a2a2a; color: white; border-radius: 10px; overflow: hidden;">
+        <thead>
+            <tr style="background-color: #444;">
+                <th style="padding: 10px;">Nome</th>
+                <th style="padding: 10px;">Email</th>
+                <th style="padding: 10px;">Tipo</th>
+                <th style="padding: 10px;">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in Model)
+            {
+                <tr style="border-top: 1px solid #555;">
+                    <td style="padding: 10px;">@usuario.Nome</td>
+                    <td style="padding: 10px;">@usuario.Email</td>
+                    <td style="padding: 10px;">@usuario.Role</td>
+                    <td style="padding: 10px;">
+                        <a href="@Url.Action("Edit", new { id = usuario.Id })" class="btn btn-sm btn-outline-primary me-2">Editar</a>
+                        <a href="@Url.Action("Delete", new { id = usuario.Id })" class="btn btn-sm btn-outline-danger">Excluir</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

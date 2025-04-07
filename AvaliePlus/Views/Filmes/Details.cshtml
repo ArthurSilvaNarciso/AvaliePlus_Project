@@ -1,0 +1,96 @@
+@model AvaliePlus.Models.Filme
+
+@{
+    ViewData["Title"] = "Detalhes do Filme";
+}
+
+<h1 style="color: #f5f5f5; font-size: 2rem; margin-bottom: 1rem;">Detalhes do Filme</h1>
+
+<div class="details-container">
+    <div class="details-content">
+        <div class="details-img">
+            <img src="@Model.ImagemUrl" alt="Capa do Filme" />
+        </div>
+        <div class="details-info">
+            <p><strong>Título:</strong> @Model.Titulo</p>
+            <p><strong>Diretor:</strong> @Model.Diretor</p>
+            <p><strong>Gênero:</strong> @Model.Genero</p>
+            <p><strong>Ano:</strong> @Model.Ano</p>
+            <p><strong>Duração:</strong> @Model.DuracaoMinutos min</p>
+            <p><strong>Descrição:</strong> @Model.Descricao</p>
+            <p><strong>Sinopse:</strong> @Model.Sinopse</p>
+        </div>
+    </div>
+
+    <div class="details-actions">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-edit">Editar</a>
+        <a asp-action="Index" class="btn-back">Voltar</a>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .details-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .details-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .details-img img {
+            max-width: 220px;
+            border-radius: 1rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .details-info {
+            flex: 1;
+            font-size: 1rem;
+            color: #111;
+        }
+
+            .details-info p {
+                margin-bottom: 0.8rem;
+            }
+
+        .details-actions {
+            margin-top: 2rem;
+        }
+
+        .btn-edit,
+        .btn-back {
+            padding: 0.6rem 1.5rem;
+            border-radius: 999px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .btn-edit {
+            background-color: #4f46e5;
+            color: #fff;
+        }
+
+            .btn-edit:hover {
+                background-color: #4338ca;
+            }
+
+        .btn-back {
+            background-color: #e5e7eb;
+            color: #111827;
+            margin-left: 1rem;
+        }
+
+            .btn-back:hover {
+                background-color: #d1d5db;
+            }
+    </style>
+}

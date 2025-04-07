@@ -1,0 +1,96 @@
+@model AvaliePlus.Models.Filme
+
+@{
+    ViewData["Title"] = "Excluir Filme";
+}
+
+<h1 style="color: #f5f5f5; font-size: 2rem; margin-bottom: 1rem;">Tem certeza que deseja excluir?</h1>
+
+<div class="delete-container">
+    <div class="delete-content">
+        <div class="delete-img">
+            <img src="@Model.ImagemUrl" alt="Capa do Filme" />
+        </div>
+        <div class="delete-info">
+            <p><strong>Título:</strong> @Model.Titulo</p>
+            <p><strong>Diretor:</strong> @Model.Diretor</p>
+            <p><strong>Gênero:</strong> @Model.Genero</p>
+            <p><strong>Ano:</strong> @Model.Ano</p>
+            <p><strong>Duração:</strong> @Model.DuracaoMinutos min</p>
+        </div>
+    </div>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn-delete">Excluir</button>
+        <a asp-action="Index" class="btn-cancel">Cancelar</a>
+    </form>
+</div>
+
+@section Scripts {
+    <style>
+        .delete-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .delete-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .delete-img img {
+            max-width: 220px;
+            border-radius: 1rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .delete-info {
+            flex: 1;
+            font-size: 1rem;
+            color: #111;
+        }
+
+            .delete-info p {
+                margin-bottom: 0.8rem;
+            }
+
+        .delete-form {
+            margin-top: 2rem;
+        }
+
+        .btn-delete,
+        .btn-cancel {
+            padding: 0.6rem 1.5rem;
+            border-radius: 999px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .btn-delete {
+            background-color: #dc2626;
+            color: #fff;
+            border: none;
+        }
+
+            .btn-delete:hover {
+                background-color: #b91c1c;
+            }
+
+        .btn-cancel {
+            background-color: #e5e7eb;
+            color: #111827;
+            margin-left: 1rem;
+        }
+
+            .btn-cancel:hover {
+                background-color: #d1d5db;
+            }
+    </style>
+}

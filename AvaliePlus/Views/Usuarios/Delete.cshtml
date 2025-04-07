@@ -1,0 +1,19 @@
+﻿@using AvaliePlus.Models
+@model Usuario
+
+@{
+    ViewData["Title"] = "Excluir Usuário";
+}
+
+<div class="container" style="max-width: 600px;">
+    <div class="card bg-dark text-white border-secondary mt-5 p-4 rounded-3 shadow text-center">
+        <h2 class="mb-3">Confirmar Exclusão</h2>
+        <p>Tem certeza que deseja excluir o usuário <strong>@Model.Nome</strong>?</p>
+
+        <form asp-action="Delete" class="mt-4">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Confirmar</button>
+            <a asp-action="Index" class="btn btn-outline-light ms-2">Cancelar</a>
+        </form>
+    </div>
+</div>
