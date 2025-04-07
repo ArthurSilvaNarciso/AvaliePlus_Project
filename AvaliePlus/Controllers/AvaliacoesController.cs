@@ -35,7 +35,8 @@ namespace AvaliePlus.Controllers
             _context.Avaliacoes.Add(avaliacao);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "Filmes", new { id = filmeId });
+            TempData["MensagemSucesso"] = "Avaliacao registrada com sucesso!";
+            return RedirectToAction("Index", "Home");
         }
         // GET: Avaliacoes/Edit/5
         public async Task<IActionResult> Edit(int id)
@@ -50,16 +51,17 @@ namespace AvaliePlus.Controllers
         // POST: Avaliacoes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Comentario")] Avaliacao avaliacaoEditada)
+        public async Task<IActionResult> Edit(int id, string Comentario)
         {
             var avaliacao = await _context.Avaliacoes.FindAsync(id);
             if (avaliacao == null)
                 return NotFound();
 
-            avaliacao.Comentario = avaliacaoEditada.Comentario;
+            avaliacao.Comentario = Comentario;
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "Filmes", new { id = avaliacao.FilmeId });
+            TempData["MensagemSucesso"] = "Avaliacao editada com sucesso!";
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Avaliacoes/Delete/5
@@ -72,7 +74,8 @@ namespace AvaliePlus.Controllers
             _context.Avaliacoes.Remove(avaliacao);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "Filmes", new { id = avaliacao.FilmeId });
+            TempData["MensagemSucesso"] = "Avaliacao excluida com sucesso!";
+            return RedirectToAction("Index", "Home");
         }
     }
 }

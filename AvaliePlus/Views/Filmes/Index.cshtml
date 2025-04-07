@@ -47,3 +47,10 @@
         </nav>
     </div>
 }
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <script>
+        window.alert('@TempData["MensagemSucesso"]');
+    </script>
+}

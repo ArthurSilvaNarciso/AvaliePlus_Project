@@ -1,10 +1,19 @@
-﻿using AvaliePlus.Data;
+﻿// FILE CONTEXT
+using AvaliePlus.Controllers;
+using AvaliePlus.Data;
 using AvaliePlus.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using AvaliePlus.Models;
+using AvaliePlus.Data;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 
 namespace AvaliePlus.Controllers
 {
@@ -17,107 +26,147 @@ namespace AvaliePlus.Controllers
             _context = context;
         }
 
-        // ✅ GET: Filmes (com paginação)
-        public async Task<IActionResult> Index(int page = 1)
+        // GET: Filmes
+        public async Task<IActionResult> Index()
         {
-            int pageSize = 8;
-
-            var filmes = await _context.Filmes
-                .OrderBy(f => f.Titulo)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            int totalFilmes = await _context.Filmes.CountAsync();
-            ViewBag.CurrentPage = page;
-            ViewBag.TotalPages = (int)Math.Ceiling(totalFilmes / (double)pageSize);
-
-            return View(filmes);
+            return View(await _context.Filmes.ToListAsync());
         }
 
         // GET: Filmes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            var filme = await _context.Filmes.FirstOrDefaultAsync(m => m.Id == id);
-            if (filme == null) return NotFound();
+            var filme = await _context.Filmes
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (filme == null)
+            {
+                return NotFound();
+            }
 
             return View(filme);
         }
 
-        // ✅ GET: Filmes/Create
+        // GET: Filmes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // ✅ POST: Filmes/Create (redireciona corretamente para a última página após salvar)
+        // POST: Filmes/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Titulo,Diretor,Genero,Ano,DuracaoMinutos,Descricao,ImagemUrl,Sinopse")] Filme filme)
+        public async Task<IActionResult> Create(int Id, string Titulo, string Diretor, string Genero, int Ano, int DuracaoMinutos, string Descricao, string ImagemUrl, string Sinopse)
         {
+            var filme = new Filme
+            {
+                Id = Id,
+                Titulo = Titulo,
+                Diretor = Diretor,
+                Genero = Genero,
+                Ano = Ano,
+                DuracaoMinutos = DuracaoMinutos,
+                Descricao = Descricao,
+                ImagemUrl = ImagemUrl,
+                Sinopse = Sinopse
+            };
+
             if (ModelState.IsValid)
             {
-                // 1. Adiciona o novo filme ao contexto
                 _context.Add(filme);
-                await _context.SaveChangesAsync(); // 2. Salva no banco de dados
+                await _context.SaveChangesAsync();
 
-                // 3. Reconta o total de filmes e calcula a última página
-                int totalFilmes = await _context.Filmes.CountAsync();
-                int pageSize = 8;
-                int ultimaPagina = (int)Math.Ceiling(totalFilmes / (double)pageSize);
-
-                // 4. Redireciona para a última página
-                return RedirectToAction("Index", new { page = ultimaPagina });
+                TempData["MensagemSucesso"] = "Filme cadastrado com sucesso!";
+                return RedirectToAction(nameof(Index));
             }
 
-            // 5. Se houver erro de validação, retorna à view
             return View(filme);
         }
+
 
         // GET: Filmes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var filme = await _context.Filmes.FindAsync(id);
-            if (filme == null) return NotFound();
-
+            if (filme == null)
+            {
+                return NotFound();
+            }
             return View(filme);
         }
 
         // POST: Filmes/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Titulo,Diretor,Genero,Ano,DuracaoMinutos,Descricao,ImagemUrl,Sinopse")] Filme filme)
+        public async Task<IActionResult> Edit(int id, string Titulo, string Diretor, string Genero, int Ano, int DuracaoMinutos, string Descricao, string ImagemUrl, string Sinopse)
         {
-            if (id != filme.Id) return NotFound();
+            var filmeEncontrado = await _context.Filmes.FindAsync(id);
+            if (filmeEncontrado == null)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
+                filmeEncontrado.Titulo = Titulo;
+                filmeEncontrado.Diretor = Diretor;
+                filmeEncontrado.Genero = Genero;
+                filmeEncontrado.Ano = Ano;
+                filmeEncontrado.DuracaoMinutos = DuracaoMinutos;
+                filmeEncontrado.Descricao = Descricao;
+                filmeEncontrado.ImagemUrl = ImagemUrl;
+                filmeEncontrado.Sinopse = Sinopse;
+
                 try
                 {
-                    _context.Update(filme);
+                    _context.Update(filmeEncontrado);
                     await _context.SaveChangesAsync();
+
+                    TempData["MensagemSucesso"] = "Filme editado com sucesso!";
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FilmeExists(filme.Id)) return NotFound();
-                    else throw;
+                    if (!_context.Filmes.Any(e => e.Id == id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(filme);
+
+            return View(filmeEncontrado);
         }
 
         // GET: Filmes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            var filme = await _context.Filmes.FirstOrDefaultAsync(m => m.Id == id);
-            if (filme == null) return NotFound();
+            var filme = await _context.Filmes
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (filme == null)
+            {
+                return NotFound();
+            }
 
             return View(filme);
         }
@@ -134,12 +183,9 @@ namespace AvaliePlus.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool FilmeExists(int id)
-        {
-            return _context.Filmes.Any(e => e.Id == id);
+            TempData["MensagemSucesso"] = "Filme apagado com sucesso!";
+            return RedirectToAction("Index", "Filmes");
         }
     }
 }

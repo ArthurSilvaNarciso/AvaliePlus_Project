@@ -118,3 +118,10 @@
         });
     </script>
 }
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <script>
+        window.alert('@TempData["MensagemSucesso"]');
+    </script>
+}
